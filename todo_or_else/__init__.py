@@ -1,15 +1,12 @@
 import functools
 import re
 from datetime import datetime
-from typing import Union, Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, Union
 
 from dateutil.parser import parse as dt_parse
 
 By = Optional[Union[datetime, str, float, int]]
 When = Optional[Union[bool, Callable[..., bool]]]
-
-
-# TODO-OR-ELSE(10/10/2021) Add linting, CI, and packaging
 
 
 class OrElseException(Exception):
@@ -18,7 +15,7 @@ class OrElseException(Exception):
         self.raw_msg = msg
         self.reason = reason
         message = f"""
-        You made a pact to complete this TODO: '{msg}' 
+        You made a pact to complete this TODO: '{msg}'
         The time has come because {reason}
         Complete this TODO or face the consequences.
         """
@@ -32,8 +29,7 @@ class TodoOrElse:
     def __call__(self, pact: str, *, by: By = None, when: When = None):
         if by is None and when is None:
             raise ValueError(
-                "Invalid arguments, you must specify at least one of (by, when) or we cannot bind you to "
-                "this pact."
+                "Invalid arguments, you must specify at least " "one of (by, when) or we cannot bind you to this pact."
             )
         self._evaluate_by(pact, by)
         self._evaluate_when(pact, when)
@@ -54,14 +50,12 @@ class TodoOrElse:
             if isinstance(when, bool) and when:
                 raise OrElseException(
                     pact,
-                    f"you agreed to complete this TODO when the condition was True and it has "
-                    f"come to pass.",
+                    "you agreed to complete this TODO when the condition was True and it has " "come to pass.",
                 )
             elif callable(when) and when():
                 raise OrElseException(
                     pact,
-                    f"you agreed to complete this TODO when the function returned True and it "
-                    f"has come to pass.",
+                    "you agreed to complete this TODO when the function returned True and it " "has come to pass.",
                 )
         return None
 
@@ -84,9 +78,7 @@ class TodoOrElse:
         return decorator
 
     @staticmethod
-    def _parse_date(
-        d: Optional[Union[datetime, str, float, int]]
-    ) -> Optional[datetime]:
+    def _parse_date(d: Optional[Union[datetime, str, float, int]]) -> Optional[datetime]:
         if d is None:
             return None
         elif isinstance(d, datetime):
@@ -116,7 +108,7 @@ def flake8_entrypoint(physical_line: str) -> Optional[Tuple[int, str]]:
     return None
 
 
-flake8_entrypoint.name = "todo_or_else"
-flake8_entrypoint.version = "0.1.0"
+flake8_entrypoint.name = "todo_or_else"  # type:ignore
+flake8_entrypoint.version = "0.1.0"  # type:ignore
 
 todo_or_else = TodoOrElse()

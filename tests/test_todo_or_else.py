@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 import todo_or_else
-from todo_or_else import TodoOrElse, OrElseException
+from todo_or_else import OrElseException, TodoOrElse
 
 
 @pytest.fixture(scope="session")
