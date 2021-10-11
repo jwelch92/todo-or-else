@@ -34,7 +34,7 @@ class TodoOrElse:
 
     def _evaluate_by(self, pact: str, by: By):
         now = datetime.utcnow()
-        due = self.__parse_date(by)
+        due = self._parse_date(by)
         if due is not None:
             if now > due:
                 raise OrElseException(
@@ -78,7 +78,7 @@ class TodoOrElse:
         return decorator
 
     @staticmethod
-    def __parse_date(
+    def _parse_date(
         d: Optional[Union[datetime, str, float, int]]
     ) -> Optional[datetime]:
         if d is None:

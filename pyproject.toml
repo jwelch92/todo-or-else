@@ -13,6 +13,9 @@ python-dateutil = "^2.8.2"
 black = "^21.9b0"
 flake8 = "^3.9.2"
 mypy = "^0.910"
+pytest = "^6.2.5"
+freezegun = "^1.1.0"
+pytest-cov = "^3.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -20,3 +23,6 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.plugins."flake8.extension"]
 "DIE001" = "todo_or_else:flake8_entrypoint"
+
+[tool.coverage.report]
+fail_under = 80
