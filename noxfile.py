@@ -1,4 +1,5 @@
 import tempfile
+from typing import Any
 
 import nox  # type:ignore
 from nox.sessions import Session  # type:ignore
@@ -9,7 +10,7 @@ locations = "todo_or_else", "noxfile.py"
 python_versions = ["3.8", "3.9"]
 
 
-def install_with_constraints(session, *args, **kwargs):
+def install_with_constraints(session: Session, *args: Any, **kwargs: Any) -> None:
     """
     Shoutout to HyperModern python for this helper
     https://cjolowicz.github.io/posts/hypermodern-python-03-linting/
@@ -28,14 +29,14 @@ def install_with_constraints(session, *args, **kwargs):
 
 
 @nox.session(python=python_versions)
-def tests(session):
+def tests(session: Session) -> None:
     args = session.posargs or ["--cov"]
     session.run("poetry", "install", external=True)
     session.run("pytest", *args)
 
 
 @nox.session(python=python_versions)
-def lint(session):
+def lint(session: Session) -> None:
     args = session.posargs or locations
     install_with_constraints(
         session,
@@ -51,7 +52,7 @@ def lint(session):
 
 
 @nox.session(python="3.9")
-def black(session: Session):
+def black(session: Session) -> None:
     args = session.posargs or locations
     install_with_constraints(session, "black", "isort")
     session.run("isort", *args)

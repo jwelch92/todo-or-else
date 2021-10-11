@@ -1,7 +1,7 @@
 import functools
 import re
 from datetime import datetime
-from typing import Callable, Optional, Tuple, Union
+from typing import Any, Callable, Optional, Tuple, Union
 
 from dateutil.parser import parse as dt_parse
 
@@ -26,7 +26,7 @@ class OrElseException(Exception):
 
 
 class TodoOrElse:
-    def __call__(self, pact: str, *, by: By = None, when: When = None):
+    def __call__(self, pact: str, *, by: By = None, when: When = None) -> None:
         if by is None and when is None:
             raise ValueError(
                 "Invalid arguments, you must specify at least " "one of (by, when) or we cannot bind you to this pact."
@@ -34,7 +34,7 @@ class TodoOrElse:
         self._evaluate_by(pact, by)
         self._evaluate_when(pact, when)
 
-    def _evaluate_by(self, pact: str, by: By):
+    def _evaluate_by(self, pact: str, by: By) -> Optional[str]:
         now = datetime.utcnow()
         due = self._parse_date(by)
         if due is not None:
@@ -45,7 +45,7 @@ class TodoOrElse:
                 )
         return None
 
-    def _evaluate_when(self, pact: str, when: When):
+    def _evaluate_when(self, pact: str, when: When) -> Optional[str]:
         if when is not None:
             if isinstance(when, bool) and when:
                 raise OrElseException(
@@ -65,12 +65,12 @@ class TodoOrElse:
     def when(self, pact: str, when: When) -> None:
         self._evaluate_when(pact, when)
 
-    def wrap(self, pact: str, by: By = None, when: When = None):
+    def wrap(self, pact: str, by: By = None, when: When = None) -> Callable:
         self.__call__(pact, by=by, when=when)
 
         def decorator(func: Callable) -> Callable:
             @functools.wraps(func)
-            def wrapper(*args, **kwargs):
+            def wrapper(*args: Any, **kwargs: Any) -> Any:
                 return func(*args, **kwargs)
 
             return wrapper
