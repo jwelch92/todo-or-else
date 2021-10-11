@@ -70,12 +70,12 @@ The error code is `DIE001`.
 
 Use it in your TODO comments. The syntax is somewhat picky, `-` was chosen because using `_` breaks some IDE # TODO comment highlighting. 
 
-`# TODO-OR-ELSE:<by some date, accepts same formats todo_or_else.by> <some message which is interpreted as the pact>`
+`# TODO-OR-ELSE(by some date, accepts same formats todo_or_else.by) <some message which is interpreted as the pact>`
 
 ```python
-
+# todo-or-else(Sunday October 31st, 2021 12PM) Complete your task
 def some_func(some_arg: str) -> None:
-    # TODO-OR-ELSE:10/31/2021 update this to return something
+    # TODO-OR-ELSE(10/31/2021) update this to return something
     print(some_arg)
 ```
 

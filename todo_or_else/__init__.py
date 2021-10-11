@@ -8,18 +8,24 @@ from dateutil.parser import parse as dt_parse
 By = Optional[Union[datetime, str, float, int]]
 When = Optional[Union[bool, Callable[..., bool]]]
 
-# TODO-OR-ELSE:10/13/2021 Add linting, CI, and packaging
+
+# TODO-OR-ELSE(10/10/2021) Add linting, CI, and packaging
 
 
 class OrElseException(Exception):
     def __init__(self, msg: str, reason: str) -> None:
-        # TODO-OR-ELSE:10/17/2021 Update the wording to be more spooky
+        # TODO-OR-ELSE(10/17/2021) Update the wording to be more spooky
+        self.raw_msg = msg
+        self.reason = reason
         message = f"""
         You made a pact to complete this TODO: '{msg}' 
         The time has come because {reason}
         Complete this TODO or face the consequences.
         """
         super().__init__(message)
+
+    def short(self) -> str:
+        return f"Pact '{self.raw_msg}' violated because {self.reason}"
 
 
 class TodoOrElse:
@@ -39,7 +45,7 @@ class TodoOrElse:
             if now > due:
                 raise OrElseException(
                     pact,
-                    f"you agreed to complete this TODO by {due} and it is now {now}",
+                    f"you agreed to complete this TODO by {due.strftime('%Y-%m-%d')}.",
                 )
         return None
 
@@ -90,12 +96,10 @@ class TodoOrElse:
         elif isinstance(d, float) or isinstance(d, int):
             return datetime.fromtimestamp(float(d))
         else:
-            raise ValueError("Invalid date")
+            raise TypeError("Invalid date")
 
 
-# TODO-OR-ELSE:10/21/2021 Move the flake8 stuff to it's own file
-
-RX_TODO_OR_ELSE = re.compile(r"\b(TODO-OR-ELSE):([^\s]+)(.*)$")
+RX_TODO_OR_ELSE = re.compile(r"\b(TODO-OR-ELSE|todo-or-else)\((.+)\)(.*)$")
 
 CODE = "DIE001"
 
@@ -103,13 +107,12 @@ CODE = "DIE001"
 def flake8_entrypoint(physical_line: str) -> Optional[Tuple[int, str]]:
     match = RX_TODO_OR_ELSE.search(physical_line)
     if match:
-        t = TodoOrElse()
         by = match.group(2)
         pact = match.group(3).strip()
         try:
-            t.by(pact, by=by)
+            TodoOrElse().by(pact, by=by)
         except OrElseException as e:
-            return match.start(), f"{CODE} {e}"
+            return match.start(), f"{CODE} {e.short()}"
     return None
 
 
