@@ -9,6 +9,10 @@ from dateutil.parser import parse as dt_parse
 By = Optional[Union[datetime, str, float, int]]
 When = Optional[Union[bool, Callable[..., bool]]]
 
+# TODO-OR-ELSE(10/18/21) Publish the package on pypi
+# TODO-OR-ELSE(10/18/21) Create blog post
+# TODO-OR-ELSE(10/25/21) Add 1 new feature, maybe the warnings-only mode
+
 
 class PactViolatedException(Exception):
     """The PactViolatedException raised when you fail to complete your tasks.
