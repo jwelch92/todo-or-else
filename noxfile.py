@@ -1,3 +1,4 @@
+"""Nox sessions."""
 import tempfile
 from typing import Any
 
@@ -11,7 +12,8 @@ python_versions = ["3.8", "3.9"]
 
 
 def install_with_constraints(session: Session, *args: Any, **kwargs: Any) -> None:
-    """
+    """Wrapper for nox.Session installation.
+
     Shoutout to HyperModern python for this helper
     https://cjolowicz.github.io/posts/hypermodern-python-03-linting/
     """
@@ -30,6 +32,7 @@ def install_with_constraints(session: Session, *args: Any, **kwargs: Any) -> Non
 
 @nox.session(python=python_versions)
 def tests(session: Session) -> None:
+    """Run tests with pytest."""
     args = session.posargs or ["--cov"]
     session.run("poetry", "install", external=True)
     session.run("pytest", *args)
@@ -37,6 +40,7 @@ def tests(session: Session) -> None:
 
 @nox.session(python=python_versions)
 def lint(session: Session) -> None:
+    """Lint with flake8, including todo_or_else."""
     args = session.posargs or locations
     install_with_constraints(
         session,
@@ -45,6 +49,7 @@ def lint(session: Session) -> None:
         "flake8-black",
         "flake8-bugbear",
         "flake8-import-order",
+        "flake8-docstrings",
     )
     # We need to install ourselves though
     session.run("poetry", "install", external=True)
@@ -53,6 +58,7 @@ def lint(session: Session) -> None:
 
 @nox.session(python="3.9")
 def black(session: Session) -> None:
+    """Run black."""
     args = session.posargs or locations
     install_with_constraints(session, "black", "isort")
     session.run("isort", *args)

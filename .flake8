@@ -1,5 +1,6 @@
 [flake8]
-select = BLK,C,E,F,W,DIE,I
+select = BLK,B9,C,E,F,W,DIE,I,D
 ignore = E203,W503
 max-line-length = 120
 application-import-names = todo_or_else
+docstring-convention = google

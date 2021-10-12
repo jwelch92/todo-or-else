@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 import todo_or_else
-from todo_or_else import OrElseException, TodoOrElse
+from todo_or_else import PactViolatedException, TodoOrElse
 
 
 @pytest.fixture(scope="session")
@@ -15,7 +15,7 @@ def todo() -> TodoOrElse:
 
 @freeze_time("2021-01-14")
 def test_by(todo: TodoOrElse) -> None:
-    with pytest.raises(OrElseException):
+    with pytest.raises(PactViolatedException):
         todo.by("this will fail", "10/1/2020")
 
     todo.by("this will not fail", "10/1/2021")
@@ -26,14 +26,14 @@ def test_todo_or_else_by(todo: TodoOrElse) -> None:
         todo("this will pass", by="12/21/2021")
 
     with freeze_time("10/01/2021"):
-        with pytest.raises(OrElseException) as exc:
+        with pytest.raises(PactViolatedException) as exc:
             todo("this will fail", by="12/21/2020")
         assert "you agreed to complete this TODO by" in str(exc.value)
 
 
 def test_todo_or_else_when(todo: TodoOrElse) -> None:
     todo("this will pass", when=False)
-    with pytest.raises(OrElseException) as exc:
+    with pytest.raises(PactViolatedException) as exc:
         todo("this will fail", when=True)
 
     assert (
@@ -49,11 +49,11 @@ def test_todo_or_else_both(todo: TodoOrElse) -> None:
 
     # this will pass by but fail when
     with freeze_time("10/21/2021"):
-        with pytest.raises(OrElseException):
+        with pytest.raises(PactViolatedException):
             todo("this will pass", by="12/31/2021 12PM", when=True)
     # this will fail by but fail when
     with freeze_time("10/21/2021"):
-        with pytest.raises(OrElseException):
+        with pytest.raises(PactViolatedException):
             todo("this will pass", by="12/31/2020 12PM", when=False)
 
 
@@ -90,14 +90,14 @@ def test_date_parsing_error(todo: TodoOrElse) -> None:
 
 
 def test_when(todo: TodoOrElse) -> None:
-    with pytest.raises(OrElseException):
+    with pytest.raises(PactViolatedException):
         todo.when("this will fail", True)
 
     todo.when("this will not fail", False)
 
 
 def test_when_callable(todo: TodoOrElse) -> None:
-    with pytest.raises(OrElseException):
+    with pytest.raises(PactViolatedException):
         todo.when("this will fail", lambda: True)
 
     todo.when("this will not fail", lambda: False)
@@ -111,7 +111,7 @@ def test_wrap(todo: TodoOrElse) -> None:
     assert f("hello world") == "hello world"
 
     with freeze_time("12/31/2021"):
-        with pytest.raises(OrElseException):
+        with pytest.raises(PactViolatedException):
 
             @todo.wrap("fix this function or else", by="10/31/2021")
             def f(something: str) -> str:
