@@ -13,6 +13,14 @@ python-dateutil = "^2.8.2"
 black = "^21.9b0"
 flake8 = "^3.9.2"
 mypy = "^0.910"
+pytest = "^6.2.5"
+freezegun = "^1.1.0"
+pytest-cov = "^3.0.0"
+flake8-black = "^0.2.3"
+flake8-import-order = "^0.18.1"
+flake8-bugbear = "^21.9.2"
+isort = "^5.9.3"
+types-python-dateutil = "^2.8.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -20,3 +28,20 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.plugins."flake8.extension"]
 "DIE001" = "todo_or_else:flake8_entrypoint"
+
+[tool.coverage.paths]
+source = ["todo_or_else", "*/site-packages"]
+
+[tool.coverage.run]
+branch = true
+source = ["todo_or_else"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 80
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 120
