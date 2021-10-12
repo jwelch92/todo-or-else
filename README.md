@@ -25,7 +25,7 @@ Possible future features
 - Short circuit on first error. Stop throwing errors after the first one. This would assume there's telemetry in place to alert if the error throws.
 - More spooky wordings
 - Actual consequences: charge money, delete files, send a mean email. 
-- Nice mode: warn when getting close instead of failing after the date or condition has passed
+- Nice mode: warn when getting close instead of failing after the date or condition has passed. Possibly emit warnings in prod for those that are less willing to make a binding pact. 
 
 ## Usage
 
